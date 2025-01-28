@@ -25,7 +25,7 @@ const AddNote = () => {
         try {
             const response = await axios({
                 method: "GET",
-                url: `https://ark-note.vercel.app/notes/${id}`,
+                url: `https://ar-note-server.vercel.app/notes/${id}`,
                 headers: {
                     Authorization: getToken()
                 }
@@ -45,7 +45,7 @@ const AddNote = () => {
 
     const handlesubmit = async (e) => {
         e.preventDefault()
-        const url=id?`https://ark-note.vercel.app/notes/edit/${id}`:`https://ark-note.vercel.app/notes/create`
+        const url=id?`https://ar-note-server.vercel.app/notes/edit/${id}`:`https://ar-note-server.vercel.app/notes/create`
         const method=id?"PATCH":"POST"
         try {
             const response = await axios({
