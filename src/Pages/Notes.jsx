@@ -17,7 +17,7 @@ const Notes = () => {
             const response = await axios(
                 {
                     method: "GET",
-                    url: "http://localhost:8000/notes",
+                    url: "https://ark-note.vercel.app/notes",
                     headers: {
                         Authorization: getToken()
                     }
@@ -43,7 +43,7 @@ const Notes = () => {
             const response = await axios(
                 {
                     method: "DELETE",
-                    url: `http://localhost:8000/notes/delete/${id}`,
+                    url: `https://ark-note.vercel.app/notes/delete/${id}`,
                     headers: {
                         Authorization: getToken()
                     }
