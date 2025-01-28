@@ -56,13 +56,13 @@ const AddNote = () => {
                     Authorization: getToken()
                 }
             })
-            if (response.status == 201) {
+            if (response.status >= 200 && response.status < 300) {
                 toast.success(response.data.message);
                 setTimeout(() => {
-                    navigate("/notes")
-                }, 1500)
-
-            }
+                    navigate("/notes");
+                }, 1500);
+            } 
+            
             else {
                 toast.info(response.data.message)
             }
