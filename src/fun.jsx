@@ -17,10 +17,11 @@ export const isAuth = () => {
 export const logout = (navigate,setProfileData,Navigate) => {
   localStorage.clear()
   setProfileData(null)
-  navigate("/")
+  navigate("/",{ replace: true })
   //  return <Navigate to="/" />
 
 }
+
 
 export const getInitials = (name) => {
   if (!name) return "";

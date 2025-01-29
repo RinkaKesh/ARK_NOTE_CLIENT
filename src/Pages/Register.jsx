@@ -4,7 +4,7 @@ import { toast,ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
-    const navigate=useState()
+    const navigate=useNavigate()
     const initialState = {
         name: "", email: "", password: ""
     }
@@ -24,7 +24,9 @@ const Register = () => {
           })
          if(response.status==201){
             toast.success(response.data.message); 
-            navigate("/login")
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
          }
          else if(response.status>=400 && response.status<500){
             toast.info(response.data.message)
@@ -33,11 +35,7 @@ const Register = () => {
           
         } catch (error) {
             if (error.response) {
-                if (error.response.status === 409) {
-                    toast.error(error.response.data.message);
-                } else {
-                    toast.error(error.response.data.message);
-                }
+                toast.error(error.response.data.message);
             } else {
                 toast.error("An unexpected error occurred. Please try again later.");
             }

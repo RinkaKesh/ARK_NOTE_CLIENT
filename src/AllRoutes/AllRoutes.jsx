@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext,useEffect} from 'react'
 import Home from '../Pages/Home'
 import Register from '../Pages/Register'
 import Login from '../Pages/Login'
@@ -9,28 +9,60 @@ import { Routes,Route,Navigate,useNavigate } from 'react-router-dom'
 import { AuthContext } from "../Context/AuthProvider";
 import { isAuth } from '../fun'
 
-
 const AllRoutes = () => {
-const navigate=useNavigate()
-  const ProtectedRoute=({children})=>{
-   if (!isAuth()){
-    setTimeout(()=>{
-       navigate("/")
-    })
-   }
-   return children
-  }
+  const navigate = useNavigate();
+
+  const ProtectedRoute = ({ children }) => {
+    useEffect(() => {
+      if (!isAuth()) {
+        navigate("/", { replace: true });
+      }
+    }, []);
+    if (!isAuth()) {
+      return "/";
+    }
+    return children;
+  };
+
   return (
     <Routes>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/register" element={<Register/>}/>
-      <Route path="/login" element={<Login/>}/>
-      <Route path="/profile/:id" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
-      <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
-      <Route path="/create_note" element={<ProtectedRoute><AddNote/></ProtectedRoute>}/>
-      <Route path="/create_note/:id" element={<ProtectedRoute><AddNote/></ProtectedRoute>}/>
+      <Route path="/" element={<Home />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/profile/:id"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notes"
+        element={
+          <ProtectedRoute>
+            <Notes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create_note"
+        element={
+          <ProtectedRoute>
+            <AddNote />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create_note/:id"
+        element={
+          <ProtectedRoute>
+            <AddNote />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
-  )
-}
+  );
+};
 
-export default AllRoutes
+export default AllRoutes;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getToken } from "../fun";
-
+import { IoMdClose } from "react-icons/io";
 const AddNote = ({ id, onSuccess, onClose }) => {
   const [formData, setFormData] = useState({ title: "", description: "" });
 
@@ -58,7 +58,15 @@ const AddNote = ({ id, onSuccess, onClose }) => {
 
   return (
     <div>
-      <h2 className="text-lg font-bold mb-4">{id ? "Edit Note" : "Add Note"}</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold">{id ? "Edit Note" : "Add Note"}</h2>
+        <button
+          onClick={onClose}
+          className="p-1 hover:bg-gray-100 rounded-full transition duration-200"
+        >
+          <IoMdClose size={24} className="text-gray-600" />
+        </button>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Enter Title</label>
