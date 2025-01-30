@@ -58,14 +58,9 @@ const Login = () => {
                 toast.error("An unexpected error occurred. Please try again later.");
             }
         }
-
         finally{
             hideLoader()
         }
-
-
-
-
     }
 
     return (

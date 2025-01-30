@@ -81,7 +81,7 @@ const Notes = () => {
               className="relative p-4 shadow rounded-md hover:shadow-lg transition duration-300 overflow-hidden cursor-pointer"  style={{
                 background: "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
               }}
-              // onClick={() => handleEdit(note._id)}
+              onClick={() => handleEdit(note._id)}
             >
               <div className={`capitalize absolute top-3 left-[-8%] w-[195%] transform rotate-45 text-base font-semibold text-center py-1.5 shadow-md flex justify-center items-center leading-relaxed ${getStatusColors(note?.status).bgColor} ${getStatusColors(note?.status).textColor}`}  
               // style={{ backgroundColor: `${getStatusColor(note?.status.toString())}` }}
@@ -109,7 +109,9 @@ const Notes = () => {
                     <CiEdit size={40} />
                   </div>
                   <div
-                    onClick={() => handleDelete(note._id)}
+                    onClick={(e) => {
+                       e.stopPropagation()
+                      handleDelete(note._id)}}
                     className="cursor-pointer text-red-500 rounded-md hover:text-red-700 transition duration-300"
                   >
                     <MdDelete size={40} />
