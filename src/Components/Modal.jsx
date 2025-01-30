@@ -5,11 +5,11 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-all duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 transition-all duration-300 backdrop-blur-xs "
       onClick={onClose}
     >
       <div 
-        className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-6 w-full max-w-lg -mt-[150px] transform transition-all duration-300 ease-out"
+        className="min-h-auto bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-6 w-full max-w-lg -mt-[90px] transform transition-all duration-300 ease-out"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

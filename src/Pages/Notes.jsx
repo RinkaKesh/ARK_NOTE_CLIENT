@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getToken, isAuth } from "../fun";
+import { getStatusColors, getToken, isAuth } from "../fun";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
@@ -49,14 +49,18 @@ const Notes = () => {
         url: `https://ar-note-server.vercel.app/notes/delete/${id}`,
         headers: { Authorization: getToken() },
       });
-      if (response.status === 204) {
+      if (response.status === 200) {
         toast.success("Note deleted successfully");
-        getNotes();
+        await getNotes();
+      }
+      else {
+        toast.info(response.data.message);
       }
     } catch (error) {
       toast.error("Something went wrong");
     }
   };
+
 
   return (
     <div className="px-10 py-4 min-h-[calc(100vh-88px)]">
@@ -70,17 +74,34 @@ const Notes = () => {
       </div>
 
       {notes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {notes.map((note) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10">
+          {notes?.map((note) => (
             <div
               key={note._id}
-              className="p-4 shadow rounded-md hover:shadow-lg transition duration-300"   style={{
+              className="relative p-4 shadow rounded-md hover:shadow-lg transition duration-300 overflow-hidden cursor-pointer"  style={{
                 background: "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
               }}
+              // onClick={() => handleEdit(note._id)}
             >
+              <div className={`capitalize absolute top-3 left-[-8%] w-[195%] transform rotate-45 text-base font-semibold text-center py-1.5 shadow-md flex justify-center items-center leading-relaxed ${getStatusColors(note?.status).bgColor} ${getStatusColors(note?.status).textColor}`}  
+              // style={{ backgroundColor: `${getStatusColor(note?.status.toString())}` }}
+              >
+                {note?.status}
+              </div>
+              <div className="">
+                <div>
+                  <p className="text-lg font-semibold text-gray-800">{note?.title}</p>
+                  <p className="text-gray-600 mb-4">{note?.description}</p>
+                </div>
+
+
+              </div>
               <div className="flex justify-between">
-                <p className="text-lg font-semibold text-gray-800">{note.title}</p>
-                <div className="flex flex-col justify-center gap-5">
+                <div>
+                  <p><strong>Start Date : </strong>{note?.startDate?new Date(note.startDate).toLocaleDateString():""}</p>
+                  <p><strong>End Date : </strong>{note?.endDate?new Date(note.endDate).toLocaleDateString():""}</p>
+                </div>
+                <div className="flex justify-center gap-5">
                   <div
                     onClick={() => handleEdit(note._id)}
                     className="cursor-pointer text-blue-500 hover:text-blue-700 transition duration-300"
@@ -95,7 +116,6 @@ const Notes = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 mb-4">{note.description}</p>
             </div>
           ))}
         </div>

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getToken } from "../fun";
 import { IoMdClose } from "react-icons/io";
 const AddNote = ({ id, onSuccess, onClose }) => {
-  const [formData, setFormData] = useState({ title: "", description: "" });
+  const textareaRef = useRef(null);
+  const initialState = { title: "", description: "", startDate: "", endDate: "",status:"" };
+  const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +22,13 @@ const AddNote = ({ id, onSuccess, onClose }) => {
         headers: { Authorization: getToken() },
       });
       if (response.status === 200) {
-        setFormData(response.data.data);
+        const { startDate, endDate, ...restData } = response.data.data;
+        const formatDate = (date) => date ? new Date(date).toISOString().split("T")[0] : "";
+        setFormData({
+          ...restData,
+          startDate: formatDate(startDate),
+          endDate: formatDate(endDate),
+        });
       }
     } catch (error) {
       console.log(error);
@@ -33,6 +41,11 @@ const AddNote = ({ id, onSuccess, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      toast.error("End date must be later than start date.");
+      return;
+    }
+  
     const url = id
       ? `https://ar-note-server.vercel.app/notes/edit/${id}`
       : `https://ar-note-server.vercel.app/notes/create`;
@@ -55,9 +68,15 @@ const AddNote = ({ id, onSuccess, onClose }) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; 
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 240)}px`;
+    }
+  }, [formData.description]);
 
   return (
-    <div>
+    <div className="">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">{id ? "Edit Note" : "Add Note"}</h2>
         <button
@@ -82,12 +101,49 @@ const AddNote = ({ id, onSuccess, onClose }) => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Enter Description</label>
           <textarea
+            ref={textareaRef}
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 resize-none"
             placeholder="Enter Description"
+            style={{ maxHeight: "240px", overflowY: "auto" }}
           ></textarea>
+        </div>
+        <div className="mb-4 w-full flex gap-1.5">
+          <div className="mb-4 flex flex-1 flex-col">
+            <label className="block text-sm font-medium text-gray-700">Start Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              placeholder="Enter Start Date"
+            />
+          </div>
+          <div className="mb-4 flex flex-1 flex-col">
+            <label className="block text-sm font-medium text-gray-700">End Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              placeholder="Enter End Date"
+            />
+          </div>
+          {/* <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Enter Status</label>
+          <input
+            type="text"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+            placeholder="Enter Status"
+          />
+        </div> */}
         </div>
         <div className="flex justify-end">
           <button

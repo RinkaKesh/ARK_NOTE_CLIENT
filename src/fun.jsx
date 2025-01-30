@@ -80,3 +80,19 @@ export const hideLoader = () => {
 export const getIsLoading = () => isLoading;
 
 
+export const getStatusColors = (status) => {
+  switch (status) {
+    case "todo":
+      return { bgColor: "bg-yellow-300", textColor: "text-black" };
+    case "active":
+      return { bgColor: "bg-green-300", textColor: "text-white" };
+    case "overdue":
+      return { bgColor: "bg-red-300", textColor: "text-white" };
+    case "completed":
+      return { bgColor: "bg-blue-300", textColor: "text-white" };
+    default:
+      return { bgColor: "bg-gray-500", textColor: "text-white" }; 
+  }
+};
+
+
